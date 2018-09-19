@@ -61,13 +61,12 @@ void updateParams2(QSR_params *params) {
 
 char findPeak (QRS_params *params){
 
-	if (params->XP[0] < params->XP[1]) && (params->XP[1] > params->XP[2]){
-
+	if ((params->Xp[0] < params->Xp[1]) && (params->Xp[1] > params->Xp[2])){
 		//Skubber alle peaks én gang mod højre.
 		params->PEAKS =rightShiftArray(params->PEAKS);
 
 		//Gemmer nu den nyest fundne værdi i PEAKS
-		PEAKS[0]=XP[1];
+		params->PEAKS[0]=params->Xp[1];
 
 		return 1;
 }
@@ -89,14 +88,14 @@ void searchBack(QRS_params *params) {
 		//Hvis den møder en PEAK >T2, så
 		//... skal den rightshifte R_PEAK
 		//.... og gemme PEAK[i] på R_PEAK[0]
-		for(i = (sizeof(params->PEAK) / sizeof(int))-1; i > 0; i--){
-			if params->PEAKS[i]>Threshold2
-				params->R_PEAKS =rightShiftArray(params->R_PEAKS);
-				R_peaks[0] = Peaks[i];
-				break;
+		for(i = (sizeof(params->PEAKS) / sizeof(int))-1; i > 0; i--){
+			if (params->PEAKS[i]>params->THRESHOLD2){
+				params->R_peak =rightShiftArray(params->R_peak);
+				params->R_peak[0] = params->PEAKS[i];
+				break;}
 		}
-		params->SPKF=0.25*R_PEAKS[0]+0.75*params->SPKF;
-		params->RR_interval1[0]=params->Counter;
+		params->SPKF=0.25*params->R_PEAKS[0]+0.75*params->SPKF;
+		params->RR_interval1[0]=params->counter;
 
 		//Beregner gennemsnit af RR
 		int sum=0;
@@ -111,33 +110,15 @@ void searchBack(QRS_params *params) {
 		params->THRESHOLD2=0.5*params->THRESHOLD1
 
 
+		//skal tjekke om det er noise eller lign.
+		//nu skal den køre vores algoritme forfra
+		//sætter SB=1
+		params->SB=1;
+		//Kør vores algoritme forfra?
 
-		//nu skal den køre fra calculate RR!
+		//sætter SB=0
+		params->SB=0;
 
-
-
-
-
-	// Nu skal vi teste om denne faktisk bare er noise eller?
-	//Sætter SB=1, da det er en searchback.
-	 params->SB=1;
-	 // Calculater RR
-	 int SB_RR=calculateRR(QRS_params *params)
-
-	 if (RR_low <SB_RR<RR_high)
-		 updateParams2(SB_RR)
-		 //Vi har nu behandlet SB
-		 params->SB=0;
-		else
-			if SB_RR>RR_miss
-
-			searchBack()
-
-	 //Vi har nu behandlet SB
-	 params->SB=0;
-
-
-	 // hvis ja, updateParams3()!
 
 
 }
