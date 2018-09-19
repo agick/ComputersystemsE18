@@ -5,7 +5,7 @@
 // it is recommended to use the structure "QRS_parameters"
 // to organize all variables and parameters
 
-typedef struct QRS_params
+typedef struct QSR_params
 { // Structure for QRS parameters
    int SPKF;
    int NPKF; 
@@ -15,18 +15,20 @@ typedef struct QRS_params
    int Xp[3];
    int counter;
    int R_peak[1];
-   int RR_interval[1];
+   int RR_interval1[1];
+   int RR_interval2[1];
    int RR_average1;
    int RR_average2;
    int RR_low;
    int RR_high;
    int RR_miss;
+   int SB;
    
-} QRS_params;
+} QSR_params;
 
 // Feel free to change and add methods
-void peakDetection(QRS_params *params);
-int findPeak (QRS_params *params);
-void searchBack(QRS_params *params);
+void peakDetection(QSR_params *params);
+int findPeak (QSR_params *params);
+void searchBack(QSR_params *params);
 
 #endif // QSR_H
