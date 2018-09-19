@@ -17,10 +17,12 @@ void updateParams1(QSR_params *params) {
     params->PEAKS = rightShiftArray(params->PEAKS);
 }
 
+
 void calculateRR(QSR_params *params) {
     params->RR_interval1[0] = params->counter;
     params->RR_interval1 = rightShiftArray(params->RR_interval1);
 }
+
 
 void updateParams2(QSR_params *params) {
 
@@ -39,7 +41,7 @@ void updateParams2(QSR_params *params) {
     }
     params->RR_average1 = sum1/8;
 
-    // Beregner gennemsnit af RR-intervaller fra peaks mellem RR_LOW og RR_HIGH der ikke er fundet via. searchback
+    // Beregner gennemsnit af RR-intervaller fra peaks mellem RR_low og RR_high der ikke er fundet via. searchback
     int sum2 = 0;
     for (int i = 0; i <= 7; i++) {
         sum2 += params->RR_interval2[i];
@@ -90,9 +92,9 @@ void searchBack(QSR_params *params) {
 		//... skal den rightshifte R_PEAK
 		//.... og gemme PEAK[i] på R_PEAK[0]
 		for(i = (sizeof(params->PEAKS) / sizeof(int))-1; i > 0; i--){
-			if (params->PEAKS[i]>params->Threshold2) {
+			if (params->PEAKS[i]>params->THRESHOLD2) {
                 params->R_peak = rightShiftArray(params->R_peak);
-                parmas->R_peak[0] = params->PEAKS[i];
+                params->R_peak[0] = params->PEAKS[i];
                 break;
             }
 		}
