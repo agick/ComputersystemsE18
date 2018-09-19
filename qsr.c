@@ -126,5 +126,3 @@ void searchBack(QSR_params *params) {
 
 }
 
-
-
