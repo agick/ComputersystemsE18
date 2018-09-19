@@ -15,7 +15,8 @@ typedef struct QSR_params
    int Xp[3];
    int counter;
    int R_peak[1];
-   int RR_interval[1];
+   int RR_interval1[1];
+   int RR_interval2[1];
    int RR_average1;
    int RR_average2;
    int RR_low;
