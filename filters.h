@@ -5,14 +5,14 @@
 
 typedef struct FILTERS_params
 { // Structure for QRS parameters
-	int Y[2];
-	int X[13];
-	int lpfX[33];
-	int hpfX[6];
-	int derX;
-	int sqrX[100];
-	int FREQ;
-	int N;
+	int Y[2];		// Output array - data has gone through all filters
+	int X[13]; 		// Input array
+	int lpfX[33];	// Output array from low pass filter
+	int hpfX[5];	// Output array from high pass filter
+	int derX;		// Output array from derivative filter
+	int sqrX[31];	// Output array from square filter
+	int FREQ;		// Common constant for all filters
+	int N;			// Window size for Moving window integration
 } FILTERS_params;
 
 FILTERS_params updateFilterParams(FILTERS_params *params);
