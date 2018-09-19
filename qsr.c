@@ -9,12 +9,12 @@ void peakDetection(QSR_params *params)
 
 
 void updateParams1(QSR_params *params) {
-    params->NPKF = 0.125 * params->PEAK[0] + 0.875 * params->NPKF;
+    params->NPKF = 0.125 * params->PEAKS[0] + 0.875 * params->NPKF;
     params->THRESHOLD1 = params->NPKF + 0.25 * (params->SPKF - params->NPKF);
     params->THRESHOLD2 = 0.5 * params->THRESHOLD1;
 
     // Gør plads til ny peak i peak-arrayet
-    params->PEAK = rightShiftArray(params->PEAK);
+    params->PEAKS = rightShiftArray(params->PEAKS);
 }
 
 void calculateRR(QSR_params *params) {
@@ -29,8 +29,8 @@ void updateParams2(QSR_params *params) {
     params->RR_interval2[0] = params->counter;
     }
 
-    params->R_peaks[0] = PEAK[0];
-    params->SPKF = 0.125 * params->PEAK[0] + 0.875 * params->SPKF;
+    params->R_peak[0] = params->PEAKS[0];
+    params->SPKF = 0.125 * params->PEAKS[0] + 0.875 * params->SPKF;
 
     // Beregner gennemsnit af RR-intervaller
     int sum1 = 0;
@@ -53,21 +53,21 @@ void updateParams2(QSR_params *params) {
     params->THRESHOLD2 = 0.5 * params->THRESHOLD1;
 
     // Gør plads til ny peak i peak-arrayet
-    params->PEAK = rightShiftArray(params->PEAK);
+    params->PEAK = rightShiftArray(params->PEAKS);
 
 }
 
 
 
-char findPeak (QRS_params *params){
+char findPeak(QSR_params *params){
 
-	if (params->XP[0] < params->XP[1]) && (params->XP[1] > params->XP[2]){
+	if ((params->Xp[0] < params->Xp[1]) && (params->Xp[1] > params->Xp[2])) {
 
 		//Skubber alle peaks én gang mod højre.
-		params->PEAKS =rightShiftArray(params->PEAKS)
+		params->PEAKS =rightShiftArray(params->PEAKS);
 
 		//Gemmer nu den nyest fundne værdi i PEAKS
-		PEAKS[0]=XP[1];
+		params->PEAKS[0]=params->Xp[1];
 
 		return 1;
 }
@@ -76,7 +76,7 @@ char findPeak (QRS_params *params){
 
 }
 
-void searchBack(QRS_params *params) {
+void searchBack(QSR_params *params) {
 
 
 	// PROBLEM! Den skal ikke køre de samme igen!
@@ -89,25 +89,26 @@ void searchBack(QRS_params *params) {
 		//Hvis den møder en PEAK >T2, så
 		//... skal den rightshifte R_PEAK
 		//.... og gemme PEAK[i] på R_PEAK[0]
-		for(i = (sizeof(params->PEAK) / sizeof(int))-1; i > 0; i--){
-			if params->PEAKS[i]>Threshold2
-				params->R_PEAKS =rightShiftArray(params->R_PEAKS);
-				R_peaks[0] = Peaks[i];
-				break;
+		for(i = (sizeof(params->PEAKS) / sizeof(int))-1; i > 0; i--){
+			if (params->PEAKS[i]>params->Threshold2) {
+                params->R_peak = rightShiftArray(params->R_peak);
+                parmas->R_peak[0] = params->PEAKS[i];
+                break;
+            }
 		}
-		params->SPKF=0.25*R_PEAKS[0]+0.75*params->SPKF;
-		params->RR_interval1[0]=params->Counter;
+		params->SPKF=0.25*params->R_peak[0]+0.75*params->SPKF;
+		params->RR_interval1[0]=params->counter;
 
 		//Beregner gennemsnit af RR
 		int sum=0;
 		for(int i=0;i<=7;i++){
 			sum+=params->RR_interval1[i];
 		}
-		params->RR_average1=sum/8
+		params->RR_average1=sum/8;
 		params->RR_low=0.92*params->RR_average1;
 		params->RR_high=1.16*params->RR_average1;
 		params->RR_miss=1.66*params->RR_average1;
-		params->THRESHOLD1=params->NPKF+0.25*(params->SPKF - params->NPKF)
+		params->THRESHOLD1=params->NPKF+0.25*(params->SPKF - params->NPKF);
 
 
 	// Nu skal vi teste om denne faktisk bare er noise eller?
@@ -116,14 +117,14 @@ void searchBack(QRS_params *params) {
 	 // Calculater RR
 	 int SB_RR=calculateRR(QRS_params *params)
 
-	 if (RR_low <SB_RR<RR_high)
-		 updateParams2(SB_RR)
-		 //Vi har nu behandlet SB
-		 params->SB=0;
-		else
-			if SB_RR>RR_miss
-
-			searchBack()
+	 if (RR_low <SB_RR<RR_high) {
+         updateParams2(SB_RR)
+         //Vi har nu behandlet SB
+         params->SB = 0;
+     }else {
+         if (params->SB_RR > params->RR_miss);
+     }
+			searchBack();
 
 	 //Vi har nu behandlet SB
 	 params->SB=0;
