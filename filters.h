@@ -5,7 +5,7 @@
 
 typedef struct FILTERS_params
 { // Structure for QRS parameters
-	int Y[2];		// Output array - data has gone through all filters
+	int Y;		// Output array - data has gone through all filters
 	int X[13]; 		// Input array
 	int lpfX[33];	// Output array from low pass filter
 	int hpfX[5];	// Output array from high pass filter
@@ -15,12 +15,7 @@ typedef struct FILTERS_params
 	int N;			// Window size for Moving window integration
 } FILTERS_params;
 
-FILTERS_params updateFilterParams(FILTERS_params *params);
 FILTERS_params initFilterParams(FILTERS_params *params);
-
-FILTERS_params updateLpfParams(FILTERS_params *params);
-FILTERS_params updateHpfParams(FILTERS_params *params);
-FILTERS_params updateSqrParams(FILTERS_params *params);
 
 void lowPassFilter(FILTERS_params *params);
 void highPassFilter(FILTERS_params *params);
