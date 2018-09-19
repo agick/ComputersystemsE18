@@ -26,5 +26,7 @@ typedef struct QRS_params
 
 // Feel free to change and add methods
 void peakDetection(QRS_params *params);
+int findPeak (QRS_params *params);
+void searchBack(QRS_params *params);
 
 #endif // QSR_H
