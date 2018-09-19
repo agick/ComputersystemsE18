@@ -14,7 +14,7 @@ char findPeak (QRS_params *params){
 	if (params->XP[0] < params->XP[1]) && (params->XP[1] > params->XP[2]){
 
 		//Skubber alle peaks én gang mod højre.
-		params->PEAKS =rightShiftArray(params->PEAKS)
+		params->PEAKS =rightShiftArray(params->PEAKS);
 
 		//Gemmer nu den nyest fundne værdi i PEAKS
 		PEAKS[0]=XP[1];
@@ -58,6 +58,14 @@ void searchBack(QRS_params *params) {
 		params->RR_high=1.16*params->RR_average1;
 		params->RR_miss=1.66*params->RR_average1;
 		params->THRESHOLD1=params->NPKF+0.25*(params->SPKF - params->NPKF)
+		params->THRESHOLD2=0.5*params->THRESHOLD1
+
+
+
+		//nu skal den køre fra calculate RR!
+
+
+
 
 
 	// Nu skal vi teste om denne faktisk bare er noise eller?
