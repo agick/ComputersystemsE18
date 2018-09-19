@@ -9,7 +9,6 @@
  */
 
 #include "sensor.h"
-#include "array.h"
 #include "filters.h"
 #include "qsr.h"
 #include <stdio.h>
@@ -45,7 +44,10 @@ int main(void)
 
 		//GET INPUT AND WRITE TO ARRAY X
 		i = getNextData(file);
-		filters_params.X = rightShiftArray(filters_params.X);
+		int k;
+		for(k = (sizeof(filters_params.X) / sizeof(int))-1; k > 0; k--){
+			filters_params.X[k] = filters_params.X[k-1];
+		}
 		filters_params.X[0] = i;
 
 		//GO THROUGH ALL FILTERS
@@ -66,7 +68,7 @@ int main(void)
 		printf("%d\t", filters_params.hpfX[0]);
 		printf("%d\t", filters_params.derX);
 		printf("%d\t", filters_params.sqrX[0]);
-		printf("%d\n", filters_params.Y[0]);
+		printf("%d\n", filters_params.Y);
 
 	}
          // Read Data from Sensor
