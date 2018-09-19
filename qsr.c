@@ -1,4 +1,5 @@
 #include "qsr.h"
+#include "array.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -6,6 +7,7 @@ void peakDetection(QRS_params *params)
 {
 
 }
+
 
 char findPeak (QRS_params *params){
 
@@ -81,5 +83,6 @@ void searchBack(QRS_params *params) {
 
 
 }
+
 
 
