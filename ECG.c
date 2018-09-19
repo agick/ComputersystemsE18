@@ -41,28 +41,34 @@ int main(void)
 	//RUN PROGRAM
 	while(j > 0) {
 		j--;
+
+		//GET INPUT AND WRITE TO ARRAY X
 		i = getNextData(file);
-		//UPDATE FILTERS_PARAMS
-		filters_params = updateFilterParams(&filters_params);
+		int k;
+		for(k = (sizeof(filters_params.X) / sizeof(int))-1; k > 0; k--){
+			filters_params.X[k] = filters_params.X[k-1];
+		}
 		filters_params.X[0] = i;
 
-		//printf("%d\n", filters_params.Y);
-
-
+		//GO THROUGH ALL FILTERS
 		lowPassFilter(&filters_params);
 		highPassFilter(&filters_params);
 		derivative(&filters_params);
 		squaring(&filters_params);
 		mwi(&filters_params);
 
+		//WRITE Y VALUE TO XP ARRAY GOING INTO PEAK DETECTION
 
 
+
+
+		//PRINT VALUES
 		printf("%d\t", filters_params.X[0]);
 		printf("%d\t", filters_params.lpfX[0]);
 		printf("%d\t", filters_params.hpfX[0]);
 		printf("%d\t", filters_params.derX);
 		printf("%d\t", filters_params.sqrX[0]);
-		printf("%d\n", filters_params.Y[0]);
+		printf("%d\n", filters_params.Y);
 
 	}
          // Read Data from Sensor
