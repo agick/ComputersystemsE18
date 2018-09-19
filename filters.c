@@ -14,7 +14,6 @@ void lowPassFilter(FILTERS_params *params)
 		);
 }
 
-
 void highPassFilter(FILTERS_params *params)
 {
 	updateHpfParams(params);
@@ -87,7 +86,6 @@ FILTERS_params updateSqrParams(FILTERS_params *params)
 	}
 	return *params;
 }
-
 
 FILTERS_params updateFilterParams(FILTERS_params *params)
 {
