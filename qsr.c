@@ -9,12 +9,12 @@ void peakDetection(QSR_params *params)
 
 
 void updateParams1(QSR_params *params) {
-    params->NPKF = 0.125 * params->PEAK[0] + 0.875 * params->NPKF;
+    params->NPKF = 0.125 * params->PEAKS[0] + 0.875 * params->NPKF;
     params->THRESHOLD1 = params->NPKF + 0.25 * (params->SPKF - params->NPKF);
     params->THRESHOLD2 = 0.5 * params->THRESHOLD1;
 
     // Gør plads til ny peak i peak-arrayet
-    params->PEAK = rightShiftArray(params->PEAK);
+    params->PEAKS = rightShiftArray(params->PEAKS);
 }
 
 void calculateRR(QSR_params *params) {
@@ -29,8 +29,8 @@ void updateParams2(QSR_params *params) {
     params->RR_interval2[0] = params->counter;
     }
 
-    params->R_peaks[0] = PEAK[0];
-    params->SPKF = 0.125 * params->PEAK[0] + 0.875 * params->SPKF;
+    params->R_peak[0] = params->PEAKS[0];
+    params->SPKF = 0.125 * params->PEAKS[0] + 0.875 * params->SPKF;
 
     // Beregner gennemsnit af RR-intervaller
     int sum1 = 0;
@@ -53,15 +53,17 @@ void updateParams2(QSR_params *params) {
     params->THRESHOLD2 = 0.5 * params->THRESHOLD1;
 
     // Gør plads til ny peak i peak-arrayet
-    params->PEAK = rightShiftArray(params->PEAK);
+    params->PEAK = rightShiftArray(params->PEAKS);
 
 }
 
 
 
-char findPeak (QRS_params *params){
+char findPeak(QSR_params *params){
 
-	if ((params->Xp[0] < params->Xp[1]) && (params->Xp[1] > params->Xp[2])){
+
+	if ((params->Xp[0] < params->Xp[1]) && (params->Xp[1] > params->Xp[2])) {
+
 		//Skubber alle peaks én gang mod højre.
 		params->PEAKS =rightShiftArray(params->PEAKS);
 
@@ -75,7 +77,7 @@ char findPeak (QRS_params *params){
 
 }
 
-void searchBack(QRS_params *params) {
+void searchBack(QSR_params *params) {
 
 
 	// PROBLEM! Den skal ikke køre de samme igen!
@@ -95,6 +97,7 @@ void searchBack(QRS_params *params) {
 				break;}
 		}
 		params->SPKF=0.25*params->R_PEAKS[0]+0.75*params->SPKF;
+
 		params->RR_interval1[0]=params->counter;
 
 		//Beregner gennemsnit af RR
@@ -102,7 +105,7 @@ void searchBack(QRS_params *params) {
 		for(int i=0;i<=7;i++){
 			sum+=params->RR_interval1[i];
 		}
-		params->RR_average1=sum/8
+		params->RR_average1=sum/8;
 		params->RR_low=0.92*params->RR_average1;
 		params->RR_high=1.16*params->RR_average1;
 		params->RR_miss=1.66*params->RR_average1;
@@ -116,8 +119,8 @@ void searchBack(QRS_params *params) {
 		params->SB=1;
 		//Kør vores algoritme forfra?
 
-		//sætter SB=0
-		params->SB=0;
+
+
 
 
 
