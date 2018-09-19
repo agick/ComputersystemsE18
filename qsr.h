@@ -14,8 +14,8 @@ typedef struct QRS_params
    int PEAKS[9];
    int Xp[3];
    int counter;
-   int R_peak[];
-   int RR_interval[];
+   int R_peak[1];
+   int RR_interval[1];
    int RR_average1;
    int RR_average2;
    int RR_low;
