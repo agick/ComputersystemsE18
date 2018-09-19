@@ -23,6 +23,7 @@ int main(void)
 
     //QRS_params qsr_params;       // Instance of the made avaiable through: #include "qsr.h"
     FILTERS_params filters_params;
+    QSR_params qsr_params;
     filters_params = initFilterParams(&filters_params);
 
     //OPEN FILE
@@ -58,8 +59,13 @@ int main(void)
 		mwi(&filters_params);
 
 		//WRITE Y VALUE TO XP ARRAY GOING INTO PEAK DETECTION
+		for(k = (sizeof(qsr_params.Xp) / sizeof(int))-1; k > 0; k--){
+			qsr_params.Xp[k] = qsr_params.Xp[k-1];
+		}
+		qsr_params.Xp[0] = filters_params.Y;
 
-
+		//RUN PEAK DETECTION
+		peakDetection(&qsr_params);
 
 
 		//PRINT VALUES
