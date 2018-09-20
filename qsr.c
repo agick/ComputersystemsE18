@@ -37,14 +37,14 @@ void updateParams2(QSR_params *params) {
     // Beregner gennemsnit af RR-intervaller
     int sum1 = 0;
     for (int i = 0; i <= 7; i++) {
-        sum1 += params->RR_interval1[i];
+        sum1 += (params->RR_interval1[i]-params->RR_interval1[i+1]);
     }
     params->RR_average1 = sum1/8;
 
     // Beregner gennemsnit af RR-intervaller fra peaks mellem RR_low og RR_high der ikke er fundet via. searchback
     int sum2 = 0;
     for (int i = 0; i <= 7; i++) {
-        sum2 += params->RR_interval2[i];
+        sum2 += (params->RR_interval2[i]-params->RR_interval2[i+1]);
     }
     params->RR_average2 = sum2/8;
 
@@ -62,7 +62,6 @@ void updateParams2(QSR_params *params) {
 
 
 char findPeak(QSR_params *params){
-
 
 	if ((params->Xp[0] < params->Xp[1]) && (params->Xp[1] > params->Xp[2])) {
 
@@ -95,9 +94,18 @@ void searchBack(QSR_params *params) {
 		//Hvis den møder en PEAK >T2, så
 		//... skal den rightshifte R_PEAK
 		//.... og gemme PEAK[i] på R_PEAK[0]
+
+
+        /* Er det ikke oplagt her at lave et while her? Fx:
+        int i = 0;
+        while (!(params->PEAKS[i] > THRESHOLD2)) {
+            i++;
+        } */
+
 		for(i = (sizeof(params->PEAKS) / sizeof(int))-1; i > 0; i--){
 
 			if (params->PEAKS[i]>params->THRESHOLD2) {
+
                 //skubber til højre
                 int u;
                 for(u = (sizeof(params->R_peak) / sizeof(int))-1; u > 0; u--){
@@ -107,12 +115,12 @@ void searchBack(QSR_params *params) {
                 params->R_peak[0] = params->PEAKS[i];
 
                 //Opdaterer en masse parametre
-                params->SPKF=0.25*params->R_peak[0]+0.75*params->SPKF;
+                params->SPKF=0.25*params->PEAKS[i]+0.75*params->SPKF;
                 params->RR_interval1[0]=params->counter;
                 //Beregner gennemsnit af RR
                 int sum=0;
                 for(int i=0;i<=7;i++){
-                	sum+=params->RR_interval1[i];
+                	sum+=(params->RR_interval1[i]-params->RR_interval1[i+1]);
                 	}
                 params->RR_average1=sum/8;
                 params->RR_low=0.92*params->RR_average1;
@@ -121,12 +129,21 @@ void searchBack(QSR_params *params) {
                 params->THRESHOLD1=params->NPKF+0.25*(params->SPKF - params->NPKF);
                 params->THRESHOLD2=0.5*params->THRESHOLD1;
 
+                /* Skubber PEAKS til venstre indtil peaket efter searchback-peaket ligger på PEAKS[0]
 
+                 while (!(params->PEAKS[0] == params->PEAKS[i])) {
+                    int w;
+                    for(w = 0; w < (sizeof(params->PEAKS) / sizeof(int)); w++){
+                        params->PEAKS[0] = params->PEAKS[1];
+                    }
+                }
+                 */
 
                 break; //Denne bør breake for-loopet.
             }
-
 		}
+
+
 
 
 

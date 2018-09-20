@@ -15,14 +15,14 @@ typedef struct QSR_params
    int Xp[3];
    int counter;
    int R_peak[1];
-   int RR_interval1[1];
-   int RR_interval2[1];
+   int RR_interval1[1]; // Indeholder intervaller fra alle R-peaks
+   int RR_interval2[1]; // Inderholder intervaller fra alle R-peaks der ikke er fundet via. seachback
    int RR_average1;
    int RR_average2;
    int RR_low;
    int RR_high;
    int RR_miss;
-   int SB;
+   int SB;              // En "boolean" der skal tjekke om det peak der bliver behandlet er fundet via. searchback
    
 } QSR_params;
 
