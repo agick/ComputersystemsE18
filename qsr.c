@@ -50,12 +50,12 @@ void updateParams2(QSR_params *params) {
 
     params->RR_low = 0.92 * params->RR_average2;
     params->RR_high = 1.19 * params->RR_average2;
-    params->MISS = 1.66 * params->RR_average2;
+    params->RR_miss = 1.66 * params->RR_average2;
     params->THRESHOLD1 = params->NPKF + 0.25 * (params->SPKF - params->NPKF);
     params->THRESHOLD2 = 0.5 * params->THRESHOLD1;
 
     // Gør plads til ny peak i peak-arrayet
-    params->PEAK = rightShiftArray(params->PEAKS);
+    params->PEAKS = rightShiftArray(params->PEAKS);
 
 }
 
@@ -67,7 +67,10 @@ char findPeak(QSR_params *params){
 	if ((params->Xp[0] < params->Xp[1]) && (params->Xp[1] > params->Xp[2])) {
 
 		//Skubber alle peaks én gang mod højre.
-		params->PEAKS =rightShiftArray(params->PEAKS);
+		int i;
+			for(i = (sizeof(params->PEAKS) / sizeof(int))-1; i > 0; i--){
+				params->PEAKS[i] = params->PEAKS[i-1];
+			}
 
 		//Gemmer nu den nyest fundne værdi i PEAKS
 		params->PEAKS[0]=params->Xp[1];
@@ -95,41 +98,45 @@ void searchBack(QSR_params *params) {
 		for(i = (sizeof(params->PEAKS) / sizeof(int))-1; i > 0; i--){
 
 			if (params->PEAKS[i]>params->THRESHOLD2) {
-                params->R_peak = rightShiftArray(params->R_peak);
+                //skubber til højre
+                int u;
+                for(u = (sizeof(params->R_peak) / sizeof(int))-1; u > 0; u--){
+                		params->R_peak[u] = params->R_peak[u-1];
+                	}
+                //gemmer i R_peak
                 params->R_peak[0] = params->PEAKS[i];
-                break;
+
+                //Opdaterer en masse parametre
+                params->SPKF=0.25*params->R_peak[0]+0.75*params->SPKF;
+                params->RR_interval1[0]=params->counter;
+                //Beregner gennemsnit af RR
+                int sum=0;
+                for(int i=0;i<=7;i++){
+                	sum+=params->RR_interval1[i];
+                	}
+                params->RR_average1=sum/8;
+                params->RR_low=0.92*params->RR_average1;
+                params->RR_high=1.16*params->RR_average1;
+                params->RR_miss=1.66*params->RR_average1;
+                params->THRESHOLD1=params->NPKF+0.25*(params->SPKF - params->NPKF);
+                params->THRESHOLD2=0.5*params->THRESHOLD1;
+
+
+
+                break; //Denne bør breake for-loopet.
             }
 
-			if (params->PEAKS[i]>params->THRESHOLD2){
-				params->R_peak =rightShiftArray(params->R_peak);
-				params->R_peak[0] = params->PEAKS[i];
-				break;}
-
 		}
-		params->SPKF=0.25*params->R_PEAKS[0]+0.75*params->SPKF;
 
-		params->RR_interval1[0]=params->counter;
-
-		//Beregner gennemsnit af RR
-		int sum=0;
-		for(int i=0;i<=7;i++){
-			sum+=params->RR_interval1[i];
-		}
-		params->RR_average1=sum/8;
-		params->RR_low=0.92*params->RR_average1;
-		params->RR_high=1.16*params->RR_average1;
-		params->RR_miss=1.66*params->RR_average1;
-		params->THRESHOLD1=params->NPKF+0.25*(params->SPKF - params->NPKF)
-		params->THRESHOLD2=0.5*params->THRESHOLD1
 
 
 		//skal tjekke om det er noise eller lign.
 		//nu skal den køre vores algoritme forfra
-		//sætter SB=1
+		//sætter SB=1. Som betyder at der kører en runde med searchback.
 		params->SB=1;
 		//Kør vores algoritme forfra?
-
-
+		// Her skal der kaldes calculate igen osv... step2()?
+		params->SB=0;
 
 
 

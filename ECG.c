@@ -65,6 +65,9 @@ int main(void)
 		qsr_params.Xp[0] = filters_params.Y;
 
 		//RUN PEAK DETECTION
+
+		// husk at sætte SB=0?
+
 		peakDetection(&qsr_params);
 
 

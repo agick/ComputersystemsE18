@@ -22,6 +22,7 @@ typedef struct QSR_params
    int RR_low;
    int RR_high;
    int RR_miss;
+   int SB;
    
 } QSR_params;
 
