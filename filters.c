@@ -3,7 +3,6 @@
 
 void lowPassFilter(FILTERS_params *params)
 {
-	//updateLpfParams(params);
 	int i;
 	for(i = (sizeof(params->lpfX) / sizeof(int))-1; i > 0; i--){
 		params->lpfX[i] = params->lpfX[i-1];

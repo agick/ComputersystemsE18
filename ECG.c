@@ -1,13 +1,3 @@
-/* kommentar.11.57
- ============================================================================
- Name        : ECG.c
- Author      : 
- Version     :
- Copyright   : Your copyright notice
- Description : Hello World in C, Ansi-style
- ============================================================================
- */
-
 #include "sensor.h"
 #include "filters.h"
 #include "qsr.h"
@@ -21,31 +11,36 @@
 int main(void)
 {
 
-    //QRS_params qsr_params;       // Instance of the made avaiable through: #include "qsr.h"
+    //INITIALIZE FILTER STRUCTURE
     FILTERS_params filters_params;
-    QSR_params qsr_params;
     filters_params = initFilterParams(&filters_params);
+
+    //INITIALIZE QSR STRUCTURE
+    QSR_params qsr_params;
+    qsr_params = initQSRParams(&qsr_params);
 
     //OPEN FILE
 	FILE *file;                  // Pointer to a file object
 	file = openfile("ECG.txt");
 
+	printf("%s\t", "Num");
 	printf("%s\t", "Input");
 	printf("%s\t", "LPF");
 	printf("%s\t", "HPF");
 	printf("%s\t", "DRV");
 	printf("%s\t", "SQR");
-	printf("%s\n", "MWI");
+	printf("%s\t", "MWI");
+	printf("%s\n", "PEAKS");
 
 	int i = 0;
-	int j = 100;
+	int j = 500;
+	int k;
 	//RUN PROGRAM
 	while(j > 0) {
 		j--;
 
 		//GET INPUT AND WRITE TO ARRAY X
 		i = getNextData(file);
-		int k;
 		for(k = (sizeof(filters_params.X) / sizeof(int))-1; k > 0; k--){
 			filters_params.X[k] = filters_params.X[k-1];
 		}
@@ -72,12 +67,14 @@ int main(void)
 
 
 		//PRINT VALUES
+		printf("%d\t", 500-j);
 		printf("%d\t", filters_params.X[0]);
 		printf("%d\t", filters_params.lpfX[0]);
 		printf("%d\t", filters_params.hpfX[0]);
 		printf("%d\t", filters_params.derX);
 		printf("%d\t", filters_params.sqrX[0]);
-		printf("%d\n", filters_params.Y);
+		printf("%d\t", qsr_params.Xp[0]);
+		printf("%d\n", qsr_params.PEAKS[0]);
 
 	}
          // Read Data from Sensor
