@@ -100,7 +100,7 @@ int main(void)
 
 /* ============================================================================
  * Tjek samhørighed med hvornår der rightShiftes - gennen hele forløbet i figuren
- * 
+ *
  *
  *
  */
