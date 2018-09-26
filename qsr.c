@@ -5,6 +5,7 @@
 void peakDetection(QSR_params *params)
 {
 	params->counter++;
+
 	if(findPeak(params)){													    //FIND PEAK
 		int i;																    //IF PEAK IS FOUND RIGHT SHIFT PEAKS ARRAY
 		for(i = (sizeof(params->PEAKS) / sizeof(int))-1; i > 0; i--){		    //RIGHT SHIFT
@@ -31,6 +32,35 @@ void peakDetection(QSR_params *params)
 			updateParams1(params);											    //IF PEAK WAS NOT LARGER THAN THRESHOLD1 UPDATE PARAMS1
 		}																	    //...
 	}																		    //...
+
+	if(findPeak(params)){													//FIND PEAK
+		int i;																//IF PEAK IS FOUND RIGHT SHIFT PEAKS ARRAY
+		for(i = (sizeof(params->PEAKS) / sizeof(int))-1; i > 0; i--){		//RIGHT SHIFT
+			params->PEAKS[i] = params->PEAKS[i-1];							//RIGHT SHIFT
+		}																	//RIGHT SHIFT
+		params->PEAKS[0]=params->Xp[1];										//SET PEAKS[0] TO FOUND PEAK
+		for(i = (sizeof(params->PEAKScount) / sizeof(int))-1; i > 0; i--){	//RIGHT SHIFT PEAKS COUNT ARRAY
+			params->PEAKScount[i] = params->PEAKS[i-1];						//RIGHT SHIFT
+		}																	//RIGHT SHIFT
+		params->PEAKScount[0]=params->counter;								//SET PEAKSCOUNT[0] TO FOUND PEAK
+		if(params->PEAKS[0] > params->THRESHOLD1){							//CHECK IF PEAK IS LARGER THAN THRESHOLD1
+			calculateRR(params);											//IF IT IS CALCULATE RR
+			if(params->RR_low < params->RR									//CHECK IF CALCULATED RR IS SMALLER THAN RR_LOW
+					&& params->RR < params->RR_high){						//AND HIGHER THAN RR_HIGH
+				params->WARNING = 0;
+				updateParams2(params);										//IF IT IS UPDATE PARAMS 2
+			} else {														//IF NOT
+				params->WARNING++;
+				if(params->RR > params->RR_miss){							//CHECK IF CALCULATED RR IS HIGHER THAN RR_MISS
+					if(searchBack(params)){									//IF IT IS DO A SEARCHBACK
+						updateParams3(params);								//IF R_PEAK FOUND UPDATE PARAMS 3
+					}														//...
+				}															//...
+			}																//...
+		} else {															//...
+			updateParams1(params);											//IF PEAK WAS NOT LARGER THAN THRESHOLD1 UPDATE PARAMS1
+		}																	//...
+	}																		//...
 }
 
 
@@ -169,6 +199,7 @@ QSR_params initQSRParams(QSR_params *params)
 	params->RR_average1 = 0;
 	params->RR_average2 = 0;
 	params->RR = 0;
+	params->WARNING = 0;
 	return *params;
 }
 
