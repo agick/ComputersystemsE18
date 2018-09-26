@@ -8,12 +8,12 @@ void displayData(QSR_params *params)
 	printf("%s\t", "RPEAK");
 	printf("%s\t", "PULS");
 	printf("\n");
-	printf("%lu\t", params->counter);
+	printf("%lu\t", params->counter/250);
 	printf("%d\t", params->R_peak[0]);
 	printf("%d\t", params->RR_average1);
-	if(params->R_peak[0] < 2000){ printf("%s\t", "WARNING"); }
+	if(params->R_peak[0] < 2000){ printf("%s\t", "WARNING: LOW RPEAK VALUE"); }
+	if(params->WARNING >= 5){ printf("%s\t", "WARNING: 5+ MISSED RPEAKS"); }
 	printf("\n\n");
-
 }
 
 void displayFilters(FILTERS_params *params)
@@ -27,6 +27,12 @@ void displayFilters(FILTERS_params *params)
 	printf("\n");
 }
 
+void displayQSR(QSR_params *params)
+{
+	printf("%d\t", params->THRESHOLD1);
+	printf("%d\t", params->THRESHOLD2);
+	printf("\n");
+}
 
 
 

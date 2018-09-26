@@ -11,8 +11,8 @@ typedef struct QSR_params
    int NPKF; 
    int THRESHOLD1;
    int THRESHOLD2;
-   int PEAKS[30];
-   int PEAKScount[30];
+   int PEAKS[200];
+   int PEAKScount[200];
    int Xp[3];
    unsigned long counter;
    int R_peak[1];
@@ -25,7 +25,7 @@ typedef struct QSR_params
    int RR_miss;
    int RR_count[30];
    int RR;
-   
+   int WARNING;
 } QSR_params;
 
 // Feel free to change and add methods

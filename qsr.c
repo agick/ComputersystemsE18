@@ -19,8 +19,10 @@ void peakDetection(QSR_params *params)
 			calculateRR(params);											//IF IT IS CALCULATE RR
 			if(params->RR_low < params->RR									//CHECK IF CALCULATED RR IS SMALLER THAN RR_LOW
 					&& params->RR < params->RR_high){						//AND HIGHER THAN RR_HIGH
+				params->WARNING = 0;
 				updateParams2(params);										//IF IT IS UPDATE PARAMS 2
 			} else {														//IF NOT
+				params->WARNING++;
 				if(params->RR > params->RR_miss){							//CHECK IF CALCULATED RR IS HIGHER THAN RR_MISS
 					if(searchBack(params)){									//IF IT IS DO A SEARCHBACK
 						updateParams3(params);								//IF R_PEAK FOUND UPDATE PARAMS 3
@@ -168,6 +170,7 @@ QSR_params initQSRParams(QSR_params *params)
 	params->RR_average1 = 0;
 	params->RR_average2 = 0;
 	params->RR = 0;
+	params->WARNING = 0;
 	return *params;
 }
 
