@@ -1,19 +1,32 @@
 #include "qsr.h"
 #include "filters.h"
+#include <stdio.h>
 
-void display(QSR_params *params)
+void displayData(QSR_params *params)
 {
-	printf("%d\t", params->counter);
-	printf("%d\t", params->Xp[0]);
-	printf("%d\t", params->PEAKS[0]);
-	printf("%d\t", params->R_peak[0]);
+	printf("%s\t", "TIME");
+	printf("%s\t", "RPEAK");
+	printf("%s\t", "PULS");
 	printf("\n");
-	fflush(stdout);
+	printf("%lu\t", params->counter);
+	printf("%d\t", params->R_peak[0]);
+	printf("%d\t", params->RR_average1);
+	if(params->R_peak[0] < 2000){ printf("%s\t", "WARNING"); }
+	printf("\n\n");
+
+}
+
+void displayFilters(FILTERS_params *params)
+{
+	printf("%d\t", params->X[0]);
+	printf("%d\t", params->lpfX[0]);
+	printf("%d\t", params->hpfX[0]);
+	printf("%d\t", params->derX);
+	printf("%d\t", params->sqrX[0]);
+	printf("%d\t", params->Y);
+	printf("\n");
 }
 
 
-printf("%d\t", filters_params.X[0]);
-printf("%d\t", filters_params.lpfX[0]);
-printf("%d\t", filters_params.hpfX[0]);
-printf("%d\t", filters_params.derX);
-printf("%d\t", filters_params.sqrX[0]);
+
+

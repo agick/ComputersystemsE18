@@ -25,6 +25,7 @@ int main(void)
 	FILE *file;                  // Pointer to a file object
 	file = openfile("ECG.txt");
 
+	/*
 	printf("%s\t", "Num");
 	printf("%s\t", "Input");
 	printf("%s\t", "LPF");
@@ -35,6 +36,7 @@ int main(void)
 	printf("%s\t", "PEAKS");
 	printf("%s\t", "R_PEAKS");
 	printf("\n");
+	*/
 
 	int i = 1;
 	int k;
@@ -65,30 +67,15 @@ int main(void)
 
 		//RUN PEAK DETECTION
 
-		// husk at sætte SB=0?
-
 		peakDetection(&qsr_params);
 
 
 		//PRINT VALUES
 
 
-		if(Num % 50 == 0){ waitFor(1); }
+		if(Num % 100 == 0){ waitFor(1); displayData(&qsr_params); }
 	}
-         // Read Data from Sensor
 
-
-
-
-
-    //lowPassFilter();            // Filter Data
-
-
-
-    //peakDetection(&qsr_params); // Perform Peak Detection
-
-
-    puts("hello world");
 	return 0;
 }
 
@@ -100,7 +87,7 @@ void waitFor (unsigned int secs) {
 
 /* ============================================================================
  * Tjek samhørighed med hvornår der rightShiftes - gennen hele forløbet i figuren
- * Effektivitet mht. rightshift
+ * 
  *
  *
  */
