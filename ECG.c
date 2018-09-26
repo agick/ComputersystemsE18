@@ -66,14 +66,14 @@ int main(void)
 		qsr_params.Xp[0] = filters_params.Y;
 
 		//RUN PEAK DETECTION
-
 		peakDetection(&qsr_params);
 
 
 		//PRINT VALUES
-
-
-		if(Num % 100 == 0){ waitFor(1); displayData(&qsr_params); }
+		if(Num % 100 == 0){
+		    waitFor(1);
+		    displayData(&qsr_params);
+		}
 	}
 
 	return 0;

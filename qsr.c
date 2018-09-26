@@ -5,32 +5,32 @@
 void peakDetection(QSR_params *params)
 {
 	params->counter++;
-	if(findPeak(params)){													//FIND PEAK
-		int i;																//IF PEAK IS FOUND RIGHT SHIFT PEAKS ARRAY
-		for(i = (sizeof(params->PEAKS) / sizeof(int))-1; i > 0; i--){		//RIGHT SHIFT
-			params->PEAKS[i] = params->PEAKS[i-1];							//RIGHT SHIFT
-		}																	//RIGHT SHIFT
-		params->PEAKS[0]=params->Xp[1];										//SET PEAKS[0] TO FOUND PEAK
-		for(i = (sizeof(params->PEAKScount) / sizeof(int))-1; i > 0; i--){	//RIGHT SHIFT PEAKS COUNT ARRAY
-			params->PEAKScount[i] = params->PEAKS[i-1];						//RIGHT SHIFT
-		}																	//RIGHT SHIFT
-		params->PEAKScount[0]=params->counter;								//SET PEAKSCOUNT[0] TO FOUND PEAK
-		if(params->PEAKS[0] > params->THRESHOLD1){							//CHECK IF PEAK IS LARGER THAN THRESHOLD1
-			calculateRR(params);											//IF IT IS CALCULATE RR
-			if(params->RR_low < params->RR									//CHECK IF CALCULATED RR IS SMALLER THAN RR_LOW
-					&& params->RR < params->RR_high){						//AND HIGHER THAN RR_HIGH
-				updateParams2(params);										//IF IT IS UPDATE PARAMS 2
-			} else {														//IF NOT
-				if(params->RR > params->RR_miss){							//CHECK IF CALCULATED RR IS HIGHER THAN RR_MISS
-					if(searchBack(params)){									//IF IT IS DO A SEARCHBACK
-						updateParams3(params);								//IF R_PEAK FOUND UPDATE PARAMS 3
-					}														//...
-				}															//...
-			}																//...
-		} else {															//...
-			updateParams1(params);											//IF PEAK WAS NOT LARGER THAN THRESHOLD1 UPDATE PARAMS1
-		}																	//...
-	}																		//...
+	if(findPeak(params)){													    //FIND PEAK
+		int i;																    //IF PEAK IS FOUND RIGHT SHIFT PEAKS ARRAY
+		for(i = (sizeof(params->PEAKS) / sizeof(int))-1; i > 0; i--){		    //RIGHT SHIFT
+			params->PEAKS[i] = params->PEAKS[i-1];							    //RIGHT SHIFT
+		}																	    //RIGHT SHIFT
+		params->PEAKS[0]=params->Xp[1];										    //SET PEAKS[0] TO FOUND PEAK
+		for(i = (sizeof(params->PEAKScount) / sizeof(int))-1; i > 0; i--){	    //RIGHT SHIFT PEAKS COUNT ARRAY
+			params->PEAKScount[i] = params->PEAKS[i-1];						    //RIGHT SHIFT
+		}																	    //RIGHT SHIFT
+		params->PEAKScount[0]=params->counter;								    //SET PEAKSCOUNT[0] TO FOUND PEAK
+		if(params->PEAKS[0] > params->THRESHOLD1){							    //CHECK IF PEAK IS LARGER THAN THRESHOLD1
+			calculateRR(params);											    //IF IT IS CALCULATE RR
+			if(params->RR_low < params->RR									    //CHECK IF CALCULATED RR IS SMALLER THAN RR_LOW
+					&& params->RR < params->RR_high){						    //AND HIGHER THAN RR_HIGH
+				updateParams2(params);										    //IF IT IS UPDATE PARAMS 2
+			} else {														    //IF NOT
+				if(params->RR > params->RR_miss){							    //CHECK IF CALCULATED RR IS HIGHER THAN RR_MISS
+					if(searchBack(params)){									    //IF IT IS DO A SEARCHBACK
+						updateParams3(params);								    //IF R_PEAK FOUND UPDATE PARAMS 3
+					}														    //...
+				}															    //...
+			}																    //...
+		} else {															    //...
+			updateParams1(params);											    //IF PEAK WAS NOT LARGER THAN THRESHOLD1 UPDATE PARAMS1
+		}																	    //...
+	}																		    //...
 }
 
 
@@ -40,6 +40,15 @@ void updateParams1(QSR_params *params) {
     params->THRESHOLD2 = 0.5 * params->THRESHOLD1;								//UPDATE THRESHOLD2
 }
 
+void calculateRR(QSR_params *params) {
+    int i;
+    for(i = (sizeof(params->RR_count) / sizeof(int))-1; i > 0; i--){		    //RIGHT SHIFT RR_COUNT ARRAY
+        params->RR_count[i] = params->RR_count[i-1];
+    }
+    params->RR_count[0] = params->PEAKScount[0];
+    params->RR = params->RR_count[0]-params->RR_count[1];
+}
+
 void updateParams2(QSR_params *params) {
 	int i;																		//INITIALIZE i
 	for(i = (sizeof(params->R_peak) / sizeof(int))-1; i > 0; i--){				//RIGHT SHIFT R_PEAK ARRAY
@@ -47,15 +56,15 @@ void updateParams2(QSR_params *params) {
 	}																			//RIGHT SHIFT
 	params->R_peak[0] = params->PEAKS[0];										//STORE PEAK AS R_PEAK
 
-	for(i = (sizeof(params->RecentRR) / sizeof(int))-1; i > 0; i--){			//RIGHT SHIFT INTERVAL2 ARRAY
+	for(i = (sizeof(params->RecentRR) / sizeof(int))-1; i > 0; i--){			//RIGHT SHIFT RECENTRR ARRAY
 		params->RecentRR[i] = params->RecentRR[i-1];							//RIGHT SHIFT
 	}																			//RIGHT SHIFT
 	params->RecentRR[0] = params->RR;
 
-	for(i = (sizeof(params->RecentRR_OK) / sizeof(int))-1; i > 0; i--){			//RIGHT SHIFT INTERVAL2 ARRAY
+	for(i = (sizeof(params->RecentRR_OK) / sizeof(int))-1; i > 0; i--){			//RIGHT SHIFT RECENTRR_OK ARRAY
 	   	params->RecentRR_OK[i] = params->RecentRR_OK[i-1];						//RIGHT SHIFT
 	}																			//RIGHT SHIFT
-    params->RecentRR_OK[0] = params->RR;										//SET RR_INTERVAL2[0] TO COUNTER2 VALUE
+    params->RecentRR_OK[0] = params->RR;										//SET RECENTRR_OK[0] TO RR VALUE
 
     params->SPKF = 0.125 * params->PEAKS[0] + 0.875 * params->SPKF;				//UPDATE SPKF
 
@@ -84,7 +93,7 @@ void updateParams3(QSR_params *params) {
 
 	int sum1 = 0;																//INITIALIZE SUM1
 	for (int i = 0; i <= 7; i++) {												//CALCULATE SUM OF LAST 8 INTERVAL1
-		sum1 += params->RecentRR[i];					//...
+		sum1 += params->RecentRR[i];											//...
 	}																			//...
 	params->RR_average1 = sum1/8;												//SET RR_AVERAGE1 TO AVERAGE OF SUM1
 
@@ -95,20 +104,12 @@ void updateParams3(QSR_params *params) {
 	params->THRESHOLD2=0.5*params->THRESHOLD1;									//UPDATE THRESHOLD2
 }
 
-void calculateRR(QSR_params *params) {
-    int i;
-    for(i = (sizeof(params->RR_count) / sizeof(int))-1; i > 0; i--){		//RIGHT SHIFT INTERVAL1 ARRAY
-      	params->RR_count[i] = params->RR_count[i-1];
-    }
-    params->RR_count[0] = params->PEAKScount[0];
-    params->RR = params->RR_count[0]-params->RR_count[1];
-}
 
 char findPeak(QSR_params *params){
-	if (params->Xp[0] < params->Xp[1] && params->Xp[1] > params->Xp[2]) {
-		return 1;
-	} else {
-		return 0;
+	if (params->Xp[0] < params->Xp[1] && params->Xp[1] > params->Xp[2]) {		//IF XP ARRAY CONTAINS A PEAK
+		return 1;																//RETURN TRUE
+	} else {																	//...
+		return 0;																//
 	}
 }
 
