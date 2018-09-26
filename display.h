@@ -3,5 +3,6 @@
 
 void displayData();
 void displayFilters();
+void displayQSR();
 
 #endif // DISPLAY_H
