@@ -12,23 +12,23 @@ typedef struct QSR_params
    int THRESHOLD1;
    int THRESHOLD2;
    int PEAKS[30];
-   int PEAKScount[30];
+   int PEAKScount[30];      //INCLUDES ALL PEAK COUNTS
    int Xp[3];
    unsigned long counter;
    int R_peak[1];
-   int RecentRR[30]; // Indeholder intervaller fra alle R-peaks
-   int RecentRR_OK[30]; // Inderholder intervaller fra alle R-peaks der ikke er fundet via. seachback
+   int RecentRR[30];        //INCLUDES TIME INTERVAL BETWEEN ALL R-PEAKS (ALSO THOSE FOUND USING SEARCHBACK)
+   int RecentRR_OK[30];     //INCLUDES TIME INTERVAL BETWEEN R-PEAKS NOT FOUND USING SEACHBACK
    int RR_average1;
    int RR_average2;
    int RR_low;
    int RR_high;
    int RR_miss;
-   int RR_count[30];
-   int RR;
+   int RR_count[30];        //INCLUDES ALL R-PEAK COUNTS
+   int RR;                  //MOST RECENT INTERVAL BETWEEN TWO R-PEAKS
    
 } QSR_params;
 
-// Feel free to change and add methods
+// QSR FUNCTION PROTOTYPES
 void peakDetection(QSR_params *params);
 void updateParams1(QSR_params *params);
 void updateParams2(QSR_params *params);
