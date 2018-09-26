@@ -100,7 +100,7 @@ void waitFor (unsigned int secs) {
 
 /* ============================================================================
  * Tjek samhørighed med hvornår der rightShiftes - gennen hele forløbet i figuren
- * 
+ *
  *
  *
  */
