@@ -1,8 +1,10 @@
 #include "sensor.h"
 #include "filters.h"
 #include "qsr.h"
+#include "display.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 // Main function for organizing the program execution.
 // The functions and object predefined are just for inspiration.
@@ -30,15 +32,17 @@ int main(void)
 	printf("%s\t", "DRV");
 	printf("%s\t", "SQR");
 	printf("%s\t", "MWI");
-	printf("%s\n", "PEAKS");
+	printf("%s\t", "PEAKS");
+	printf("%s\t", "R_PEAKS");
+	printf("\n");
 
-	int i = 0;
-	int j = 500;
+	int i = 1;
 	int k;
+	unsigned long Num = 0;
+	char run = 1;
 	//RUN PROGRAM
-	while(j > 0) {
-		j--;
-
+	while(run) {
+		Num++;
 		//GET INPUT AND WRITE TO ARRAY X
 		i = getNextData(file);
 		for(k = (sizeof(filters_params.X) / sizeof(int))-1; k > 0; k--){
@@ -67,15 +71,9 @@ int main(void)
 
 
 		//PRINT VALUES
-		printf("%d\t", 500-j);
-		printf("%d\t", filters_params.X[0]);
-		printf("%d\t", filters_params.lpfX[0]);
-		printf("%d\t", filters_params.hpfX[0]);
-		printf("%d\t", filters_params.derX);
-		printf("%d\t", filters_params.sqrX[0]);
-		printf("%d\t", qsr_params.Xp[0]);
-		printf("%d\n", qsr_params.PEAKS[0]);
 
+
+		if(Num % 50 == 0){ waitFor(1); }
 	}
          // Read Data from Sensor
 
@@ -92,6 +90,11 @@ int main(void)
 
     puts("hello world");
 	return 0;
+}
+
+void waitFor (unsigned int secs) {
+    unsigned int retTime = time(0) + secs;   // Get finishing time.
+    while (time(0) < retTime);               // Loop until it arrives.
 }
 
 

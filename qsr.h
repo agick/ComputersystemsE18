@@ -16,8 +16,8 @@ typedef struct QSR_params
    int Xp[3];
    unsigned long counter;
    int R_peak[1];
-   int RR_interval1[8]; // Indeholder intervaller fra alle R-peaks
-   int RR_interval2[8]; // Inderholder intervaller fra alle R-peaks der ikke er fundet via. seachback
+   int RecentRR[30]; // Indeholder intervaller fra alle R-peaks
+   int RecentRR_OK[30]; // Inderholder intervaller fra alle R-peaks der ikke er fundet via. seachback
    int RR_average1;
    int RR_average2;
    int RR_low;
