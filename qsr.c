@@ -13,15 +13,15 @@ void peakDetection(QSR_params *params)
 		params->PEAKS[0]=params->Xp[1];										//SET PEAKS[0] TO FOUND PEAK
 		for(i = (sizeof(params->PEAKScount) / sizeof(int))-1; i > 0; i--){	//RIGHT SHIFT PEAKS COUNT ARRAY
 			params->PEAKScount[i] = params->PEAKS[i-1];						//RIGHT SHIFT
-			}																//RIGHT SHIFT
+		}																	//RIGHT SHIFT
 		params->PEAKScount[0]=params->counter;								//SET PEAKSCOUNT[0] TO FOUND PEAK
 		if(params->PEAKS[0] > params->THRESHOLD1){							//CHECK IF PEAK IS LARGER THAN THRESHOLD1
 			calculateRR(params);											//IF IT IS CALCULATE RR
-			if(params->RR_low < params->RecentRR[0]							//CHECK IF CALCULATED RR IS SMALLER THAN RR_LOW
-					&& params->RecentRR[0] < params->RR_high){				//AND HIGHER THAN RR_HIGH
+			if(params->RR_low < params->RR									//CHECK IF CALCULATED RR IS SMALLER THAN RR_LOW
+					&& params->RR < params->RR_high){						//AND HIGHER THAN RR_HIGH
 				updateParams2(params);										//IF IT IS UPDATE PARAMS 2
 			} else {														//IF NOT
-				if(params->RecentRR[0] > params->RR_miss){					//CHECK IF CALCULATED RR IS HIGHER THAN RR_MISS
+				if(params->RR > params->RR_miss){							//CHECK IF CALCULATED RR IS HIGHER THAN RR_MISS
 					if(searchBack(params)){									//IF IT IS DO A SEARCHBACK
 						updateParams3(params);								//IF R_PEAK FOUND UPDATE PARAMS 3
 					}														//...
@@ -47,22 +47,27 @@ void updateParams2(QSR_params *params) {
 	}																			//RIGHT SHIFT
 	params->R_peak[0] = params->PEAKS[0];										//STORE PEAK AS R_PEAK
 
+	for(i = (sizeof(params->RecentRR) / sizeof(int))-1; i > 0; i--){			//RIGHT SHIFT INTERVAL2 ARRAY
+		params->RecentRR[i] = params->RecentRR[i-1];							//RIGHT SHIFT
+	}																			//RIGHT SHIFT
+	params->RecentRR[0] = params->RR;
+
 	for(i = (sizeof(params->RecentRR_OK) / sizeof(int))-1; i > 0; i--){			//RIGHT SHIFT INTERVAL2 ARRAY
 	   	params->RecentRR_OK[i] = params->RecentRR_OK[i-1];						//RIGHT SHIFT
 	}																			//RIGHT SHIFT
-    params->RecentRR_OK[0] = params->PEAKScount[0];								//SET RR_INTERVAL2[0] TO COUNTER2 VALUE
+    params->RecentRR_OK[0] = params->RR;										//SET RR_INTERVAL2[0] TO COUNTER2 VALUE
 
     params->SPKF = 0.125 * params->PEAKS[0] + 0.875 * params->SPKF;				//UPDATE SPKF
 
     int sum1 = 0;																//INITIALIZE SUM1
     for (int i = 0; i <= 7; i++) {												//CALCULATE SUM OF LAST 8 INTERVAL1
-        sum1 += params->RecentRR[i];					//...
+        sum1 += params->RecentRR[i];											//...
     }																			//...
     params->RR_average1 = sum1/8;												//SET RR_AVERAGE1 TO AVERAGE OF SUM1
 
     int sum2 = 0;																//INITIALIZE SUM2
     for (int i = 0; i <= 7; i++) {												//CALCULATE SUM OF LAST 8 INTERVAL2
-        sum2 += params->RecentRR_OK[i];				//...
+        sum2 += params->RecentRR_OK[i];											//...
     }																			//...
     params->RR_average2 = sum2/8;												//SET RR_AVERAGE2 TO AVERAGE OF SUM2
 
@@ -92,10 +97,11 @@ void updateParams3(QSR_params *params) {
 
 void calculateRR(QSR_params *params) {
     int i;
-    for(i = (sizeof(params->RecentRR) / sizeof(int))-1; i > 0; i--){		//RIGHT SHIFT INTERVAL1 ARRAY
-      	params->RecentRR[i] = params->RecentRR[i-1];
+    for(i = (sizeof(params->RR_count) / sizeof(int))-1; i > 0; i--){		//RIGHT SHIFT INTERVAL1 ARRAY
+      	params->RR_count[i] = params->RR_count[i-1];
     }
-    params->RecentRR[0] = params->PEAKScount[0]-params->PEAKScount[1];
+    params->RR_count[0] = params->PEAKScount[0];
+    params->RR = params->RR_count[0]-params->RR_count[1];
 }
 
 char findPeak(QSR_params *params){
@@ -148,6 +154,9 @@ QSR_params initQSRParams(QSR_params *params)
 	for(i = 0; i < sizeof(params->R_peak) / sizeof(int); i++){
 		params->R_peak[i] = 0;
 	}
+	for(i = 0; i < sizeof(params->RR_count) / sizeof(int); i++){
+		params->RR_count[i] = 0;
+	}
 	params->THRESHOLD1 = 0;
 	params->THRESHOLD2 = 0;
 	params->RR_low = 0;
@@ -158,6 +167,7 @@ QSR_params initQSRParams(QSR_params *params)
 	params->NPKF = 0;
 	params->RR_average1 = 0;
 	params->RR_average2 = 0;
+	params->RR = 0;
 	return *params;
 }
 
