@@ -27,8 +27,6 @@ typedef struct QSR_params
    int RR_miss;
    int RR_count[30];        //INCLUDES ALL R-PEAK COUNTS
    int RR;                  //MOST RECENT INTERVAL BETWEEN TWO R-PEAKS
-   int RR_count[30];
-   int RR;
    int WARNING;
 } QSR_params;
 
