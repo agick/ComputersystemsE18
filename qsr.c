@@ -118,7 +118,7 @@ char findPeak(QSR_params *params){
 
 char searchBack(QSR_params *params){
 	int i = 0;
-	int j;
+	int j,k;
 	while(params->PEAKS[i] <= params->THRESHOLD2 && 							//FIND MOST RECENT PEAK ABOVE THRESHOLD2
 		  i < (sizeof(params->PEAKS) / sizeof(int))-1){							//OR STOP AT THE END OF THE PEAKS ARRAY
 		i++;
