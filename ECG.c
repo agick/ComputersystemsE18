@@ -23,7 +23,7 @@ int main(void)
 
     //OPEN FILE
 	FILE *file;                  // Pointer to a file object
-	file = openfile("ECG.txt");
+	file = openfile("ECG10800K.txt");
 
 	/*
 	printf("%s\t", "Num");
@@ -43,6 +43,7 @@ int main(void)
 	unsigned long Num = 0;
 	char run = 1;
 	//RUN PROGRAM
+
 	while(run) {
 		Num++;
 		//GET INPUT AND WRITE TO ARRAY X
@@ -68,27 +69,13 @@ int main(void)
 		//RUN PEAK DETECTION
 		peakDetection(&qsr_params);
 
-
 		//PRINT VALUES
-		if(Num % 100 == 0){
-		    waitFor(1);
-		    displayData(&qsr_params);
-		}
+		if(Num % 100 == 0){ waitFor(1); displayData(&qsr_params); }
 	}
-
 	return 0;
 }
 
-void waitFor (unsigned int secs) {
-    unsigned int retTime = time(0) + secs;   // Get finishing time.
-    while (time(0) < retTime);               // Loop until it arrives.
+void waitFor (unsigned int sec) {
+    unsigned int remainTime = time(0) + sec;
+    while (time(0) < remainTime);
 }
-
-
-/* ============================================================================
- * Tjek samhørighed med hvornår der rightShiftes - gennen hele forløbet i figuren
- * 
- *
- *
- */
-

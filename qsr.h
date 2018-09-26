@@ -11,13 +11,11 @@ typedef struct QSR_params
    int NPKF; 
    int THRESHOLD1;
    int THRESHOLD2;
-   int PEAKS[30];
-   int PEAKScount[30];      //INCLUDES ALL PEAK COUNTS
-   int PEAKS[200];
-   int PEAKScount[200];
+   int PEAKS[8];
+   int PEAKScount[8];      //INCLUDES ALL PEAK COUNTS
    int Xp[3];
    unsigned long counter;
-   int R_peak[1];
+   int R_peak[8];
    int RecentRR[30];        //INCLUDES TIME INTERVAL BETWEEN ALL R-PEAKS (ALSO THOSE FOUND USING SEARCHBACK)
    int RecentRR_OK[30];     //INCLUDES TIME INTERVAL BETWEEN R-PEAKS NOT FOUND USING SEACHBACK
    int RR_average1;
