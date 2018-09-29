@@ -15,8 +15,8 @@ void displayData(QSR_params *params)
 	} else {
 		printf("%s\t", "UNDEF");
 	}
-	if(params->R_peak[0] < 2000){ printf("%s\t", "WARNING: LOW RPEAK VALUE"); }
-	if(params->WARNING >= 5){ printf("%s\t", "WARNING: 5+ MISSED RPEAKS"); }
+	if(params->R_peak[0] < 2000){ printf("%s\t", "\nWARNING: LOW RPEAK VALUE"); }
+	if(params->WARNING >= 5){ printf("%s\t", "\nWARNING: 5+ MISSED RPEAKS"); }
 	printf("\n\n");
 }
 

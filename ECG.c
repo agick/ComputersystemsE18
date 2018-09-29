@@ -10,6 +10,8 @@
 // The functions and object predefined are just for inspiration.
 // Please change orden,names arguments to fit your solution.
 
+
+
 int main(void)
 {
 
@@ -23,7 +25,7 @@ int main(void)
 
     //OPEN FILE
 	FILE *file;                  // Pointer to a file object
-	file = openfile("ECG10800K.txt");
+	file = openfile("ECG10800.txt");
 
 	/*
 	printf("%s\t", "Num");
@@ -70,12 +72,7 @@ int main(void)
 		peakDetection(&qsr_params);
 
 		//PRINT VALUES
-		if(Num % 100 == 0){ waitFor(1); displayData(&qsr_params); }
+		displayData(&qsr_params);
 	}
 	return 0;
-}
-
-void waitFor (unsigned int sec) {
-    unsigned int remainTime = time(0) + sec;
-    while (time(0) < remainTime);
 }
