@@ -6,7 +6,7 @@ int getNextData(FILE *file)
 {
 
 	if (file == NULL) {
-	        printf("Error: file pointer is null.");
+	        printf("All data has been read and treated in the program.");
 	        return 0;
 	}
 
