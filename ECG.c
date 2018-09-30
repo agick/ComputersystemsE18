@@ -25,7 +25,7 @@ int main(void)
 
     //OPEN FILE
 	FILE *file;                  				// Pointer to a file object
-	file = openfile("ECG10800.txt");
+	file = openfile("/Users/bruger/Documents/DTU/3.1 Computer Systems/Github/ComputersystemsE18/ECG.txt");
 
 	int i = 1;
 	int k;
