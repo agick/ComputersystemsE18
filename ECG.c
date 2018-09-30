@@ -24,21 +24,8 @@ int main(void)
     qsr_params = initQSRParams(&qsr_params);
 
     //OPEN FILE
-	FILE *file;                  // Pointer to a file object
+	FILE *file;                  				// Pointer to a file object
 	file = openfile("ECG10800.txt");
-
-	/*
-	printf("%s\t", "Num");
-	printf("%s\t", "Input");
-	printf("%s\t", "LPF");
-	printf("%s\t", "HPF");
-	printf("%s\t", "DRV");
-	printf("%s\t", "SQR");
-	printf("%s\t", "MWI");
-	printf("%s\t", "PEAKS");
-	printf("%s\t", "R_PEAKS");
-	printf("\n");
-	*/
 
 	int i = 1;
 	int k;
@@ -63,10 +50,10 @@ int main(void)
 		mwi(&filters_params);
 
 		//WRITE Y VALUE TO XP ARRAY GOING INTO PEAK DETECTION
-		for(k = (sizeof(qsr_params.Xp) / sizeof(int))-1; k > 0; k--){
-			qsr_params.Xp[k] = qsr_params.Xp[k-1];
-		}
-		qsr_params.Xp[0] = filters_params.Y;
+		for(k = (sizeof(qsr_params.Xp) / sizeof(int))-1; k > 0; k--){		// RIGHT SHIFT XP ARRAY
+			qsr_params.Xp[k] = qsr_params.Xp[k-1];							// RIGHT SHIFT
+		}																	// RIGHT SHIFT
+		qsr_params.Xp[0] = filters_params.Y;								// PUT FILTER OUTPUT Y INTO QSR XP ARRAY
 
 		//RUN PEAK DETECTION
 		peakDetection(&qsr_params);

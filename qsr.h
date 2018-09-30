@@ -13,7 +13,7 @@ typedef struct QSR_params
    int THRESHOLD2;
    int PEAKS[8];
    int PEAKScount[8];      //INCLUDES ALL PEAK COUNTS
-   int Xp[3];
+   int Xp[3];              //WINDOW OF THREE PEAKS
    unsigned long counter;  //TIME UNIT
    int R_peak[2];
    int RecentRR[8];        //INCLUDES TIME INTERVAL BETWEEN ALL R-PEAKS (ALSO THOSE FOUND USING SEARCHBACK)
@@ -23,8 +23,8 @@ typedef struct QSR_params
    int RR_low;
    int RR_high;
    int RR_miss;
-   int RR_count[30];        //INCLUDES ALL R-PEAK COUNTS
-   int RR;                  //MOST RECENT INTERVAL BETWEEN TWO R-PEAKS
+   int RR_count[30];       //INCLUDES ALL R-PEAK COUNTS
+   int RR;                 //MOST RECENT INTERVAL BETWEEN TWO R-PEAKS
    int WARNING;
 } QSR_params;
 
