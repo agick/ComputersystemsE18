@@ -2,14 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int getNextData(FILE *file)
-{
+int getNextData(FILE *file) {
 
 	if (file == NULL) {
-	        printf("Error: file pointer is null.");
+	        printf("The input data file is empty.\n");
 	        return 0;
 	}
-
 	int i;
 	fscanf(file, "%d", &i);
 		 return i;
@@ -17,8 +15,7 @@ int getNextData(FILE *file)
    // return sensor value
 }
 
-FILE* openfile(const char* filename)
-{
+FILE* openfile(const char* filename) {
    FILE *file = fopen(filename,"r");
 
    return file;
