@@ -23,29 +23,19 @@ int main(void)
 
     //OPEN FILE
 	FILE *file;                  // Pointer to a file object
-	file = openfile("ECG10800K.txt");
+	file = openfile("ECG.txt");
 
-	/*
-	printf("%s\t", "Num");
-	printf("%s\t", "Input");
-	printf("%s\t", "LPF");
-	printf("%s\t", "HPF");
-	printf("%s\t", "DRV");
-	printf("%s\t", "SQR");
-	printf("%s\t", "MWI");
-	printf("%s\t", "PEAKS");
-	printf("%s\t", "R_PEAKS");
-	printf("\n");
-	*/
+
 
 	int i = 1;
 	int k;
 	unsigned long Num = 0;
-	char run = 1;
+	int run = 1;
 	//RUN PROGRAM
-
-	while(run) {
+	displayNames();
+	while(run <= 10000) {
 		Num++;
+		run++;
 		//GET INPUT AND WRITE TO ARRAY X
 		i = getNextData(file);
 		for(k = (sizeof(filters_params.X) / sizeof(int))-1; k > 0; k--){
@@ -70,12 +60,8 @@ int main(void)
 		peakDetection(&qsr_params);
 
 		//PRINT VALUES
-		if(Num % 100 == 0){ waitFor(1); displayData(&qsr_params); }
+		displayData(&qsr_params);
 	}
 	return 0;
 }
 
-void waitFor (unsigned int sec) {
-    unsigned int remainTime = time(0) + sec;
-    while (time(0) < remainTime);
-}

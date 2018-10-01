@@ -7,6 +7,8 @@
 
 typedef struct QSR_params
 { // Structure for QRS parameters
+   int PEAK_old;
+   int RPEAK_old;
    int SPKF;
    int NPKF; 
    int THRESHOLD1;
@@ -15,7 +17,7 @@ typedef struct QSR_params
    int PEAKScount[8];      //INCLUDES ALL PEAK COUNTS
    int Xp[3];
    unsigned long counter;
-   int R_peak[8];
+   int R_peak;
    int RecentRR[30];        //INCLUDES TIME INTERVAL BETWEEN ALL R-PEAKS (ALSO THOSE FOUND USING SEARCHBACK)
    int RecentRR_OK[30];     //INCLUDES TIME INTERVAL BETWEEN R-PEAKS NOT FOUND USING SEACHBACK
    int RR_average1;

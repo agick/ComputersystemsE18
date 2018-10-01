@@ -12,17 +12,24 @@ void peakDetection(QSR_params *params)
 		}																		//RIGHT SHIFT
 		params->PEAKS[0]=params->Xp[1];											//SET PEAKS[0] TO FOUND PEAK
 		for(i = (sizeof(params->PEAKScount) / sizeof(int))-1; i > 0; i--){		//RIGHT SHIFT PEAKS COUNT ARRAY
-			params->PEAKScount[i] = params->PEAKS[i-1];							//RIGHT SHIFT
+			params->PEAKScount[i] = params->PEAKScount[i-1];					//RIGHT SHIFT
 		}																		//RIGHT SHIFT
 		params->PEAKScount[0]=params->counter;									//SET PEAKSCOUNT[0] TO FOUND PEAK
+
 		if(params->PEAKS[0] > params->THRESHOLD1){								//CHECK IF PEAK IS LARGER THAN THRESHOLD1
+
+
+
 			calculateRR(params);												//IF IT IS CALCULATE RR
-			if(params->RR_low < params->RR && params->RR < params->RR_high){	//CHECK IF CALCULATED RR IS SMALLER THAN RR_LOW AND HIGHER THAN RR_HIGH
+
+			if(params->RR_low < params->RR && params->RR < params->RR_high){	//CHECK IF CALCULATED RR IS HIGHER THAN RR_LOW AND SMALLER THAN RR_HIGH
+
 				params->WARNING = 0;
 				updateParams2(params);											//IF IT IS UPDATE PARAMS 2
 			} else {															//IF NOT
 				params->WARNING++;
 				if(params->RR > params->RR_miss){								//CHECK IF CALCULATED RR IS HIGHER THAN RR_MISS
+
 					if(searchBack(params)){										//IF IT IS DO A SEARCHBACK
 						updateParams3(params);									//IF R_PEAK FOUND UPDATE PARAMS 3
 					}															//...
@@ -43,10 +50,20 @@ void updateParams1(QSR_params *params) {
 
 void updateParams2(QSR_params *params) {
 	int i;																		//INITIALIZE i
-	for(i = (sizeof(params->R_peak) / sizeof(int))-1; i > 0; i--){				//RIGHT SHIFT R_PEAK ARRAY
-	   	params->R_peak[i] = params->R_peak[i-1];								//RIGHT SHIFT
-	}																			//RIGHT SHIFT
-	params->R_peak[0] = params->PEAKS[0];										//STORE PEAK AS R_PEAK
+	params->R_peak = params->PEAKS[0];
+	for(int i = (sizeof(params->RR_count) / sizeof(int))-1; i > 0; i--){
+		params->RR_count[i] = params->RR_count[i-1];
+	}
+	params->RR_count[0] = params->PEAKScount[0];
+
+
+	params->R_peak = params->PEAKS[0];										//STORE PEAK AS R_PEAK
+
+	for(i = (sizeof(params->RR_count) / sizeof(int))-1; i > 0; i--){			//RIGHT SHIFT INTERVAL1 ARRAY
+		params->RR_count[i] = params->RR_count[i-1];
+	}
+	params->RR_count[0] = params->PEAKScount[0];
+
 
 	for(i = (sizeof(params->RecentRR) / sizeof(int))-1; i > 0; i--){			//RIGHT SHIFT RECENTRR ARRAY
 		params->RecentRR[i] = params->RecentRR[i-1];							//RIGHT SHIFT
@@ -85,7 +102,9 @@ void updateParams2(QSR_params *params) {
 }
 
 void updateParams3(QSR_params *params) {
-	params->SPKF=0.25*params->PEAKS[0]+0.75*params->SPKF;						//UPDATE SPKF
+
+
+						//UPDATE SPKF
 	int sum1 = 0;
 	int samples = 0;															//INITIALIZE SUM1
 	for (int i = 0; i <= 7; i++) {												//CALCULATE SUM OF LAST 8 INTERVAL1
@@ -102,12 +121,7 @@ void updateParams3(QSR_params *params) {
 }
 
 void calculateRR(QSR_params *params) {
-    int i;
-    for(i = (sizeof(params->RR_count) / sizeof(int))-1; i > 0; i--){			//RIGHT SHIFT INTERVAL1 ARRAY
-      	params->RR_count[i] = params->RR_count[i-1];
-    }
-    params->RR_count[0] = params->PEAKScount[0];
-    params->RR = params->RR_count[0]-params->RR_count[1];
+    params->RR = params->PEAKScount[0]-params->RR_count[0];
 }
 
 char findPeak(QSR_params *params){
@@ -116,23 +130,30 @@ char findPeak(QSR_params *params){
 	} else {																	//...
 		return 0;																//RETURN FALSE
 	}
+
 }
 
 char searchBack(QSR_params *params){
-	int i = 0;
-	int j;
-	for(i = 0; i < sizeof(params->PEAKS) / sizeof(int); i++){
-		if(params->PEAKScount[i] > params->RR_count[1] && params->PEAKScount[i] < params->RR_count[0]){
-			if(params->PEAKS[i] > params->THRESHOLD2){
-				for(j = (sizeof(params->RecentRR) / sizeof(int))-1; j > 0; j--){//RIGHT SHIFT RECENTRR ARRAY
-					params->RecentRR[j] = params->RecentRR[j-1];				//RIGHT SHIFT
-				}																//RIGHT SHIFT
-				params->RecentRR[0] = params->PEAKScount[i]-params->RR_count[1];//SET RECENTRR TO PEAK FOUND MINUS LAST RR PEAK
-				return 1;
-			}
-		}																		//RETURN TRUE FOR FOUND SEARCHBACK PEAK
+	for(int j = 1; j < (sizeof(params->PEAKS) / sizeof(int))-1; j++){
+		if(params->PEAKS[j] > params->THRESHOLD2 && params->PEAKScount[j] > params->RR_count[1]){
+			for(int i = (sizeof(params->RecentRR) / sizeof(int))-1; i > 0; i--){//RIGHT SHIFT RECENTRR ARRAY
+				params->RecentRR[i] = params->RecentRR[i-1];					//RIGHT SHIFT
+			}																	//RIGHT SHIFT
+			params->RecentRR[0] = params->PEAKScount[j]-params->RR_count[1];	//INPUT RR INTO RECENTRR ARRAY
+
+			for(int i = (sizeof(params->RR_count) / sizeof(int))-1; i > 0; i--){//RIGHT SHIFT RECENTRR ARRAY
+				params->RR_count[i] = params->RR_count[i-1];					//RIGHT SHIFT
+			}																	//RIGHT SHIFT
+			params->RR_count[0] = params->PEAKScount[j];						//INPUT RR INTO RECENTRR ARRAY
+			params->SPKF=0.25*params->PEAKS[j]+0.75*params->SPKF;
+			printf("%d\t", params->PEAKScount[j]/250);
+			printf("%d\t", params->PEAKS[j]);
+			printf("%s\t", "<-- RPEAK FOUND THROUGH SEARCHBACK");
+			printf("\n");
+			return 1;
+		}
 	}
-	return 0;																	//OTHERWISE RETURN FALSE
+	return 0;
 }
 
 QSR_params initQSRParams(QSR_params *params)									//INITIALIZE QSR_PARAMS DATA STRUCTURE VARIABLES
@@ -148,17 +169,15 @@ QSR_params initQSRParams(QSR_params *params)									//INITIALIZE QSR_PARAMS DAT
 		params->Xp[i] = 0;
 	}
 	for(i = 0; i < sizeof(params->RecentRR) / sizeof(int); i++){				//SET ALL RECENTRR INTERVALS TO 0
-		params->RecentRR[i] = 150;
+		params->RecentRR[i] = 0;
 	}
 	for(i = 0; i < sizeof(params->RecentRR_OK) / sizeof(int); i++){				//SET ALL RECENTRR_OK INTERVALS TO 0
-		params->RecentRR_OK[i] = 150;
-	}
-	for(i = 0; i < sizeof(params->R_peak) / sizeof(int); i++){					//SET ALL R_PEAKS TO 0
-		params->R_peak[i] = 0;
+		params->RecentRR_OK[i] = 0;
 	}
 	for(i = 0; i < sizeof(params->RR_count) / sizeof(int); i++){				//SET ALL RR_COUNTS TO 0
 		params->RR_count[i] = 0;
 	}
+	params->R_peak = 0;
 	params->THRESHOLD1 = 0;														//SET THRESHOLD1 TO 0
 	params->THRESHOLD2 = 0;														//SET THRESHOLD2 TO 0
 	params->RR_low = 0;															//SET RR_LOW TO 0
@@ -171,6 +190,8 @@ QSR_params initQSRParams(QSR_params *params)									//INITIALIZE QSR_PARAMS DAT
 	params->RR_average2 = 0;													//SET RR_AVERAGE2 TO 0
 	params->RR = 0;																//SET RR TO 0
 	params->WARNING = 0;														//SET WARNING TO 0
+	params->PEAK_old = 0;
+	params->RPEAK_old = 0;
 	return *params;																//RETURN INITIALIZED PARAMETERS
 }
 
